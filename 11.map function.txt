@@ -1,0 +1,137 @@
+db.createCollection('order')
+
+db.order.insert([
+  {
+    Customer_id:'A1',
+    Amount:400,
+    Status:'P'
+    
+  },
+  {
+    Customer_id:'B1',
+    Amount:300,
+    Status:'D'
+    
+  },
+  {
+    Customer_id:'A1',
+    Amount:200,
+    Status:'F'
+    
+  },
+  {
+    Customer_id:'C1',
+    Amount:200,
+    Status:'F'
+    
+  },
+  {
+    Customer_id:'B1',
+    Amount:700,
+    Status:'P'
+    
+  },
+  {
+    Customer_id:'B1',
+    Amount:800,
+    Status:'P'
+    
+  }
+])
+  
+db.order.find().pretty()  
+
+db.order.insert([
+  {
+    Customer_id:'A1',
+    Amount:700,
+    Status:'D'
+    
+  },
+  {
+    Customer_id:'B1',
+    Amount:1200,
+    Status:'D'
+    
+  },
+  {
+    Customer_id:'C1',
+    Amount:150,
+    Status:'D'
+    
+  },
+  {
+    Customer_id:'C1',
+    Amount:845,
+    Status:'F'
+    
+  },
+  {
+    Customer_id:'A1',
+    Amount:800,
+    Status:'P'
+    
+  },
+  {
+    Customer_id:'A1',
+    Amount:550,
+    Status:'D'
+    
+  },
+  {
+    Customer_id:'B1',
+    Amount:780,
+    Status:'F'
+    
+  },
+  {
+    Customer_id:'C1',
+    Amount:1500,
+    Status:'D'
+    
+  }
+  ])
+  
+  db.order.find().pretty()
+  
+//Sum of Amount of Delievered Orders of each customer
+var mapfunction=function(){
+  if(this.Status=='F')
+  emit(this.Customer_id,this.Amount)
+  
+};
+var reducefunction=function(key,values){
+  return Array.sum(values);
+  
+};
+db.order.mapReduce(mapfunction,reducefunction,{'out':'delieverdOrders'})
+db.delieverdOrders.find().pretty()  
+  
+  //Minimum Amount of each customer
+var mapfunction1=function(){
+  emit(this.Customer_id,this.Amount)
+  
+};
+var reducefunction1=function(key,values){
+  return Math.min.apply(Math,values);
+  
+};
+db.order.mapReduce(mapfunction1,reducefunction1,{'out':'minAmtOrder'})
+db.minAmtOrder.find().pretty()  
+  
+  
+//Max Amount of failed orders of each customer
+var mapfunction2=function(){
+  if(this.Status=='F')
+  emit(this.Customer_id,this.Amount)
+  
+};
+var reducefunction2=function(key,values){
+  return Math.max.apply(Math,values);
+  
+};
+db.order.mapReduce(mapfunction2,reducefunction2,{'out':'maxAmtFailedOrder'})
+db.maxAmtFailedOrder.find().pretty();  
+  
+  
+  

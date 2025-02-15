@@ -1,0 +1,65 @@
+create table stud_marks(roll_no int(20), total_marks int(20));
+insert into stud_marks values(1001, 870),(1002, 925),(1003, 1400),(1004, 1200);
+select * from stud_marks;
+
+create table result(roll_no int(20), name varchar(20), class varchar(20));
+insert into result(roll_no, name) values(1001, "Rushi"),(1002, "snehal"),(1003,"Aditi"),(1004,"Sanket");
+select * from result;
+
+delimiter //
+ create procedure proc_grade(IN ROLL int)
+begin
+declare marks int default 0;
+declare grade varchar(50);
+select s.total_marks into marks from stud_marks s where s.roll_no=Roll;
+if marks<=1500 AND marks>=990 then
+set grade="Distinction";
+elseif marks<990 AND marks>=899 then
+set grade="First Class";
+elseif marks<899 AND marks>=825
+then set grade="Second Class";
+END if;
+update result set class = grade where roll_no=Roll;
+END
+//
+
+call proc_grade(1004);//
+select * from result;
+
+delimiter ;
+call proc_grade(1002);
+select * from result;
+
+
+delimiter //
+create function fun_grade(Roll int)
+returns varchar(20)
+DETERMINISTIC
+begin
+declare grade varchar(20);
+declare marks int default 0;
+select s.total_marks into marks from stud_marks s where s.roll_no=Roll;
+if marks<=1500 AND marks>= 990 then
+set grade="Distinction";
+elseif marks<990 AND marks>899 then
+set grade="First Class";
+elseif marks<899 AND marks>=825 then set grade="Second Class";
+elseif marks<825 then set grade="FAIL";
+end if;
+return grade;
+END;
+//
+   
+    
+select fun_grade(1001);
+
+insert into stud_marks values(1005, 700);
+   
+insert into result(roll_no, name) values(1005, "Raj");
+   
+delimiter ;
+select * from result;
+
+select * from stud_marks;
+
+select fun_grade(1005);

@@ -1,0 +1,60 @@
+create table borrower(
+rollno INT,
+name VARCHAR(100),
+issue_date DATE,
+book_name VARCHAR(100),
+status CHAR(5),
+PRIMARY KEY(rollno)
+);
+
+desc borrower;
+
+insert into borrower (rollno,name,issue_date,book_name,status)values
+(1,'Aditi','2021-08-15','JAVA','I');
+
+insert into borrower (rollno,name,issue_date,book_name,status)values
+(2,'Aditya','2021-08-01','DBMS','I'),
+(3,'Anurag','2021-08-31','TOC','I'),
+(4,'Asim','2021-09-10','CNS','I'),
+(5,'Aryan','2021-09-04','DS','I'),
+(6,'Aneesh','2021-08-20','HCI','I'),
+(7,'Abhishek','2021-08-13','PYTHON','I');
+select * from borrower;
+
+create table fine(
+rollno INT PRIMARY KEY,
+return_date DATE,
+amount INT,
+FOREIGN KEY (rollno) references borrower(rollno) 
+);
+
+desc fine;
+
+delimiter //
+create procedure calculate_fine(IN rno INT, n VARCHAR(10))
+BEGIN
+declare i_date DATE;
+declare day_diff INT;
+declare fine_amt INT;
+DECLARE EXIT HANDLER FOR 1062 select 'Fine already paid';
+select issue_date into i_date from borrower where rollno=rno and name=n;
+select DATEDIFF(CURDATE(),i_date) into day_diff;
+IF (day_diff >= 15 and day_diff <= 30) THEN
+set fine_amt = day_diff * 5;
+insert into fine values(rno,CURDATE(),fine_amt);
+ELSEIF (day_diff > 30) THEN
+set fine_amt = day_diff * 50;
+insert into fine values(rno,CURDATE(),fine_amt);
+END IF;
+update borrower set status ='R' where rollno = rno and name=n;
+END;
+//
+DELIMITER ;
+
+call calculate_fine(4,'Asim');
+select * from borrower;
+
+call calculate_fine(1,'Aditi');
+select * from fine;
+
+call calculate_fine(1,'Aditi');

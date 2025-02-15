@@ -1,0 +1,50 @@
+
+CREATE TABLE Employee (
+  empId INTEGER(10) PRIMARY KEY,
+  emp_name varchar(20),
+  emp_gender varchar(20)
+);
+desc Employee;
+alter table Employee add emp_dept varchar(20);
+desc Employee;
+
+insert into Employee values(1,"neha","f","comp");
+insert into Employee values(2,"sneha","f","it");
+insert into Employee values(3,"raha","f","aids");
+insert into Employee values(4,"rama","f","mec");
+
+select *from Employee;
+
+create view emp_view1 as select * from Employee;
+select * from emp_view1;
+
+create view emp_view2 as select * from Employee where emp_dept="it";
+select * from emp_view2;
+
+update Employee set emp_dept="code" where empId=1;
+select *from Employee;
+
+select count(*) from Employee;
+
+select max(emp_dept) from Employee;
+
+SELECT * FROM Employee ORDER BY emp_name ASC;
+
+select emp_gender from Employee;
+
+drop view emp_view2;
+
+create index emp_ind on Employee(emp_dept,emp_name);
+show index from Employee;
+
+truncate table Employee;
+select * from Employee;
+
+delete from Employee where emp_name="rama";
+select * from Employee;
+
+drop table Employee;
+
+
+desc Employee;
+

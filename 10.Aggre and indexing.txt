@@ -1,0 +1,75 @@
+
+db.createCollection('student')
+
+db.student.insert({
+  roll:1,
+name:"navin",
+age:21,
+subject_marks:{OOP:70,DSA:80}
+  
+})
+
+db.student.find().pretty()
+
+db.student.insert([
+  {
+    roll:2,
+    name:"saurabh",
+    age:19,
+    subject_marks:{OOP:90,DSA:85}
+    
+  },
+	{
+	  roll:3,
+	  name:"aditya",
+	  age:20,
+	  subject_marks:{OOP:82,DSA:74}
+	  
+	},
+	{
+	  roll:4,
+	  name:"anusha",
+	  age:19,
+	  subject_marks:{OOP:70,DSA:65}
+	  
+	},
+	{
+	  roll:5,
+	  name:"anurag",
+	  age:20,
+	  subject_marks:{OOP:98,DSA:95}
+	  
+	}
+	])
+	
+	db.student.find().pretty()
+	
+	//Unique Index
+db.student.createIndex({'roll':1},{unique:true})
+	
+	//Simple Index
+db.student.createIndex({"name":1})
+
+//Compound Index
+db.student.createIndex({"subject_marks.OOP":-1,"subject_marks.DSA":-1})
+	
+db.student.getIndexes()	
+
+db.student.find().pretty().sort({name:1})
+	
+db.student.find().pretty().sort({"subject_marks.OOP":-1,"subject_marks.DSA":-1})	
+	
+db.student.distinct('age')
+	
+db.student.aggregate([{$group:{_id:"$age",count:{$sum:1}}},{$sort:{"_id":1}}])
+
+db.student.aggregate([{$group:{_id:"OOP",maxMarks:{$max:"$subject_marks.OOP"}}}])
+
+db.student.aggregate([{$group:{_id:"DSA",minMarks:{$min:"$subject_marks.DSA"}}}])
+
+db.student.aggregate([{$project:{_id:"$roll",sum:{$sum:["$subject_marks.OOP","$subject_marks.DSA"]}}},{$sort:{sum:1}}])
+
+
+	
+	
+	

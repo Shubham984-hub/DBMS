@@ -1,0 +1,49 @@
+mongo
+show dbs
+db
+use database_name
+show collections;
+
+db.createCollection('student')
+
+db.student.insert({
+  roll:1,
+  name:"neha",
+  email:"neha@gmail.com",
+  marks:95
+});
+
+
+db.Student.insert({
+	roll:2,
+	name:'Aditya',
+	email:'aditya@abc.com',
+	marks:85	
+});
+
+
+db.Student.insert({
+	roll:3,
+	name:'Aryan',
+	email:'aryan@abc.com',
+	marks:92	
+});
+
+db.Student.update(
+	{marks:{$gte: 90}},
+	{$set:{grade:'A'}},
+	{multi:true}
+)
+
+db.Student.update(
+	{$and:[{marks:{$lt: 90}},{marks:{$gte: 70}}]},
+	{$set:{grade:'B'}},
+	{multi:true}
+)
+
+db.Student.find().pretty()
+
+db.Student.remove({'roll':2});
+ db.Student.find().pretty();
+ 
+  
